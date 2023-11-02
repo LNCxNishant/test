@@ -1,0 +1,141 @@
+import pandas as pd
+import numpy as mp 
+import matplotlib.pyplot as plt
+
+df=pd.read_csv("heart.csv")
+df
+df.head(10)
+descriptive_stats=df.describe()
+print("Descriptive stats")
+print(descriptive_stats)
+
+data_types=df.dtypes
+print("Datatypes")
+print(data_types)
+attribute_range=df.max()-df.min()
+print("range for each attribute")
+print(attribute_range)
+quartile=df.quantile ([0.25,0.5,0.75])
+print("Quartiles:")
+print(quartile)
+percentile=df.quantile([0.1,0.25,0.5,0.75,0.9])
+print("Percentiles")
+print(percentile)
+
+pip install seaborn
+import seaborn as sns
+import matplotlib.pyplot as plt
+for column in df.columns:
+    df.boxplot(column=column)
+    plt.xticks(roation=45)
+    plt.title(f"Boxplot for {column}")
+    plt.show()
+
+def find_outliers(attribute):
+    q1 = attribute.quantile(0.25)
+    q3 = attribute.quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    outliers = attribute[(attribute < lower_bound) | (attribute > upper_bound)]
+    return outliers
+
+outliers_info = {}
+for column in df.columns:
+    outliers_info[column] = find_outliers(df[column])
+    print("Outliers in", column, ":", outliers_info[column])
+import matplotlib.pyplot as plt
+
+# Define the attribute to plot
+attribute_to_plot = 'chol'
+
+# Create a histogram with 20 bins and black edges
+plt.hist(df[attribute_to_plot], bins=20, edgecolor='black')
+
+# Set the title of the plot
+plt.title(f'histogram of {attribute_to_plot}')
+
+# Label the x-axis
+plt.xlabel(attribute_to_plot)
+
+# Label the y-axis
+plt.ylabel('Frequency')
+
+# Display the plot
+plt.show()
+
+# Define the attributes to plot
+attribute_x = 'trestbps'
+attribute_y = 'chol'
+
+# Create a scatter plot
+plt.scatter(df[attribute_x], df[attribute_y])
+
+# Set the title of the plot
+plt.title(f'scatter plot: {attribute_x} vs {attribute_y}')
+
+# Label the x-axis
+plt.xlabel(attribute_x)
+
+# Label the y-axis
+plt.ylabel(attribute_y)
+
+# Display the plot
+plt.show()
+
+
+# Define the attribute to plot
+attribute_to_plot = 'sex'
+
+# Count the values in the 'sex' column
+attribute_counts = df[attribute_to_plot].value_counts()
+
+# Create a pie chart
+plt.pie(attribute_counts, labels=attribute_counts.index, autopct='%1.1f%%')
+
+# Set the aspect ratio to make it a perfect circle
+plt.axis('equal')
+
+# Set the title of the pie chart
+plt.title(f'pie chart: {attribute_to_plot}')
+
+# Display the pie chart
+plt.show()
+
+
+# Calculate the correlation matrix for the DataFrame
+correlation_matrix = df.corr()
+
+# Print the correlation matrix
+print("Correlation Matrix:")
+print(correlation_matrix)
+
+import pandas as pd
+
+# Check for missing values and their counts
+missing_values = df.isnull()
+missing_counts = missing_values.sum()
+print("Missing value counts:")
+print(missing_counts)
+
+def handle_outliers(attribute_series):
+    q1 = attribute_series.quantile(0.25)
+    q3 = attribute_series.quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+
+    # Use a lambda function to replace outliers
+    attribute_series = attribute_series.apply(lambda x: lower_bound if x < lower_bound else (upper_bound if x > upper_bound else x))
+    
+    return attribute_series
+
+attribute_to_handle_outliers = ['trestbps', 'chol']
+for attribute in attribute_to_handle_outliers:
+    df[attribute] = handle_outliers(df[attribute])
+
+# Calculate average values for columns and fill missing values with the corresponding column's mean
+average_values = df.mean()
+df.fillna(average_values, inplace=True)
+
+df
