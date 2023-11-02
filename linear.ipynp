@@ -1,0 +1,20 @@
+import numpy as np
+
+x = np.array([30, 70, 110, 150, 180, 220, 260, 300, 350, 390])
+y = np.array([0.18, 0.37, 0.35, 0.78, 0.56, 0.75, 1.18, 1.36, 1.17, 1.65])
+
+x_mean = np.mean(x)
+y_mean = np.mean(y)
+
+numerator = np.sum((x - x_mean)*(y - y_mean))
+denominator = np.sum((x - x_mean) ** 2)
+
+b1 = numerator / denominator
+bo = y_mean - (b1 * x_mean)
+
+predicted_evaporation_coefficient = bo + (b1 * 250)
+
+R_squared = np.sum(((bo+b1*x) - y_mean) ** 2) / np.sum((y-y_mean) ** 2)
+
+print("Predicted Evaporation Coefficient : ",predicted_evaporation_coefficient)
+print("R-Squared value = ",R_squared)
